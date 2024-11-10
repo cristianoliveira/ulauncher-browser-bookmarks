@@ -10,7 +10,9 @@ from ulauncher.api.shared.action.RenderResultListAction import \
 from ulauncher.api.shared.event import ItemEnterEvent, KeywordQueryEvent
 from ulauncher.api.shared.item.ExtensionResultItem import ExtensionResultItem
 
-logging.basicConfig()
+loglevel = os.environ.get("LOG_LEVEL", "ERROR")
+print('Starting with loglevel: %s' % loglevel)
+logging.basicConfig(level=loglevel)
 logger = logging.getLogger(__name__)
 
 support_browsers = [
@@ -48,7 +50,9 @@ class BrowserBookmarks(Extension):
         res_lst = []
         for browser in support_browsers:
             f = os.popen('find $HOME/.config/%s | grep Bookmarks' % browser)
-            res = f.read().split('\n')
+            output=f.read()
+            logger.debug('Browser %s bookmarks grep output %s', browser, output)
+            res = output.split('\n')
             if len(res) == 0:
                 logger.info('Path to the %s Bookmarks was not found' % browser)
                 continue
@@ -58,6 +62,9 @@ class BrowserBookmarks(Extension):
 
         if len(res_lst) == 0:
             logger.exception('Path to the Chrome Bookmarks was not found')
+
+        logger.debug('Bookmarks list %s', res_lst)
+
         return res_lst
 
     def find_rec(self, bookmark_entry, query, matches):
