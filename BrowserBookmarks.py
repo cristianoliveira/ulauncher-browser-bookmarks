@@ -7,7 +7,7 @@ from ulauncher.api.client.Extension import Extension
 from ulauncher.api.shared.action.OpenUrlAction import OpenUrlAction
 from ulauncher.api.shared.action.RenderResultListAction import \
     RenderResultListAction
-from ulauncher.api.shared.event import ItemEnterEvent, KeywordQueryEvent
+from ulauncher.api.shared.event import KeywordQueryEvent
 from ulauncher.api.shared.item.ExtensionResultItem import ExtensionResultItem
 
 loglevel = os.environ.get("LOG_LEVEL", "ERROR")
@@ -31,7 +31,7 @@ browser_imgs = {
 
 
 class KeywordQueryEventListener(EventListener):
-    def on_event(self, event, extension):
+    def on_event(self, event, extension): # type: ignore[reportIncompatibleMethodOverride]
         items = extension.get_items(event.get_argument())
         return RenderResultListAction(items)
 
